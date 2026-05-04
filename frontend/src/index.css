@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-surface-900 text-slate-100 antialiased min-h-screen;
+  }
+}
+
+/* Light theme overrides */
+body.theme-light {
+  background: #e8eef7 !important;
+  color: #0a1325 !important;
+  font-weight: 500;
+}
+
+body.theme-light .bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, #edf3fc, #dde8f8, #cadbf3) !important;
+}
+
+body.theme-light .bg-surface-900 {
+  background-color: #e4ecf8 !important;
+}
+
+body.theme-light .bg-surface-900\/40,
+body.theme-light .bg-surface-900\/50,
+body.theme-light .bg-surface-900\/60,
+body.theme-light .bg-surface-900\/80 {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+}
+
+body.theme-light .bg-surface-800,
+body.theme-light .bg-surface-800\/40,
+body.theme-light .bg-surface-800\/50,
+body.theme-light .bg-surface-800\/60,
+body.theme-light .bg-surface-800\/70,
+body.theme-light .bg-surface-800\/95 {
+  background-color: #ffffff !important;
+  box-shadow: 0 10px 24px rgba(30, 58, 138, 0.16) !important;
+}
+
+body.theme-light .border-slate-700,
+body.theme-light .border-slate-700\/80,
+body.theme-light .border-slate-600 {
+  border-color: #1e3a8a !important;
+}
+
+body.theme-light .text-white {
+  color: #0a1325 !important;
+}
+
+body.theme-light .text-slate-100,
+body.theme-light .text-slate-200,
+body.theme-light .text-slate-300 {
+  color: #1b2a4a !important;
+}
+
+body.theme-light .text-slate-400,
+body.theme-light .text-slate-500 {
+  color: #253a68 !important;
+}
+
+body.theme-light .bg-slate-700,
+body.theme-light .bg-slate-800 {
+  background-color: #c8d6ee !important;
+}
+
+body.theme-light .text-accent,
+body.theme-light .text-sky-300 {
+  color: #1e3a8a !important;
+}
+
+body.theme-light button,
+body.theme-light a {
+  transition: all 180ms ease;
+}
+
+body.theme-light button:hover {
+  filter: saturate(120%);
+}
+
+body.theme-light .bg-accent {
+  background-color: #1e3a8a !important;
+  color: #eff6ff !important;
+}
+
+body.theme-light .hover\:bg-accent-dim:hover {
+  background-color: #172554 !important;
+}
+
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3 {
+  color: #0a1325 !important;
+  letter-spacing: -0.01em;
+}
+
+body.theme-light p,
+body.theme-light li,
+body.theme-light label,
+body.theme-light span {
+  color: #1f3562;
+}

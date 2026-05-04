@@ -1,0 +1,57 @@
+{
+  "strengths": [
+    "Strong alignment between answers and resume experience.",
+    "Most answers were clearly structured.",
+    "Voice delivery appeared confident.",
+    "Facial expressions indicated confidence."
+  ],
+  "weaknesses": [
+    "Some resume skills were not mentioned during answers."
+  ],
+  "interview_confidence_score": 72.5,
+  "fusion_breakdown": {
+    "voice_confidence_contribution": 20.3,
+    "facial_confidence_contribution": 15.6,
+    "answer_relevance_contribution": 31.2,
+    "weights": {
+      "voice": 0.35,
+      "facial": 0.25,
+      "answer": 0.4
+    }
+  },
+  "voice_analysis": {
+    "overall": "Average nervous score 45/100, silence ratio 0.07, pitch mean 142 Hz.",
+    "metrics": {
+      "avg_pitch_mean_hz": 142.3,
+      "avg_pitch_std": 8.2,
+      "avg_silence_ratio": 0.07,
+      "avg_nervous_score": 45.2,
+      "nervous_trend": "flat",
+      "silence_trend": "flat"
+    }
+  },
+  "facial_analysis": {
+    "overall": "Average facial confidence 62/100, nervousness 38/100.",
+    "metrics": {
+      "avg_confidence_score": 62.5,
+      "avg_nervousness_score": 38.2
+    }
+  },
+  "answer_analysis": {
+    "overall": "Average relevance 78/100 with 45 words per answer. 3 answers were clear.",
+    "metrics": {
+      "avg_relevance_score": 78.0,
+      "avg_word_count": 45.0,
+      "good_clarity_count": 3,
+      "unclear_count": 0,
+      "short_count": 0,
+      "resume_keywords_detected_top": ["python", "project", "experience"],
+      "resume_keywords_missing_top": ["leadership"]
+    }
+  },
+  "suggestions": [
+    "Use structured answers: Situation → Action → Result.",
+    "Mention resume projects/tools explicitly in responses.",
+    "Practice speaking with fewer pauses to improve confidence."
+  ]
+}

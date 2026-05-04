@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv*/
+env/
+.env
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Never commit local Python environments or vendored site-packages
+backend/venv/
+backend/.venv*/
+backend/Lib/
+backend/Scripts/
+**/site-packages/
+
+# Archives / accidental bundles
+*.zip
+
+# Local DB and session data
+backend/data/
+*.db
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,32 @@
+{
+  "transcript": "I have three years of experience in Python and worked on machine learning projects at my previous company.",
+  "voice_analysis": {
+    "tone": "analyzed",
+    "confidence": "high",
+    "pauses": 0.5,
+    "energy": 0.0234,
+    "pitch_mean_hz": 145.2,
+    "pitch_variance": 89.3,
+    "nervous_score": 42.1,
+    "silence_ratio": 0.08,
+    "summary": "Average pitch: 145.2 Hz. Steady speaking pace with few long pauses. Calm, consistent tone detected. Energy level is adequate."
+  },
+  "facial_analysis": {
+    "confidence_score": 62.5,
+    "nervousness_score": 38.2,
+    "stress_score": 35.1,
+    "dominant_emotion": "confidence",
+    "frames_analyzed": 5,
+    "summary": "Analyzed 5 frame(s). Avg confidence: 62/100, nervousness: 38/100, stress: 35/100. Dominant: confidence."
+  },
+  "evaluation": {
+    "relevance_score": 78,
+    "clarity": "good",
+    "length_feedback": "Good length; answer had enough detail.",
+    "word_count": 18,
+    "answer_length_category": "normal",
+    "detected_keywords": ["python", "machine", "learning"],
+    "missing_keywords": ["project", "experience"]
+  },
+  "next_index": 1
+}

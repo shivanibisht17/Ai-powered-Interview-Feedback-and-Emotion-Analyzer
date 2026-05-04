@@ -1,0 +1,22 @@
+{
+  "confidence_score": 65.2,
+  "nervousness_score": 32.1,
+  "stress_score": 28.5,
+  "dominant_emotion": "confidence",
+  "frames_analyzed": 3,
+  "summary": "Analyzed 3 frame(s). Avg confidence: 65/100, nervousness: 32/100, stress: 28/100. Dominant: confidence.",
+  "per_frame": [
+    {
+      "confidence_score": 62.3,
+      "nervousness_score": 35.0,
+      "stress_score": 30.2,
+      "dominant_emotion": "confidence"
+    },
+    {
+      "confidence_score": 67.1,
+      "nervousness_score": 30.0,
+      "stress_score": 27.0,
+      "dominant_emotion": "confidence"
+    }
+  ]
+}
