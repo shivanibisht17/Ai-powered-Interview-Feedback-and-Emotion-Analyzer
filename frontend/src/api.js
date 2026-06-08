@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const base = "/api";
+const base = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")}/api`
+  : "/api";
 const SESSION_KEY = "interview_session_id";
 
 export function getSessionId() {
