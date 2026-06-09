@@ -2,7 +2,19 @@ import axios from "axios";
 
 const base = import.meta.env.VITE_API_BASE_URL
   ? import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")
-  : "/api";
+  : import.meta.env.DEV
+  ? "/api"
+  : null;
+
+function getApiBaseUrl() {
+  if (!base) {
+    throw new Error(
+      "Missing VITE_API_BASE_URL in production. Set VITE_API_BASE_URL to your backend URL or deploy the backend with the frontend."
+    );
+  }
+  return base;
+}
+
 const SESSION_KEY = "interview_session_id";
 
 export function getSessionId() {
@@ -14,22 +26,22 @@ export function setSessionId(sessionId) {
 }
 
 export async function registerUser({ name, email, password }) {
-  const { data } = await axios.post(`${base}/auth/register`, { name, email, password });
+  const { data } = await axios.post(`${getApiBaseUrl()}/auth/register`, { name, email, password });
   return data;
 }
 
 export async function loginUser({ email, password }) {
-  const { data } = await axios.post(`${base}/auth/login`, { email, password });
+  const { data } = await axios.post(`${getApiBaseUrl()}/auth/login`, { email, password });
   return data;
 }
 
 export async function logoutUser() {
-  const { data } = await axios.post(`${base}/auth/logout`, {});
+  const { data } = await axios.post(`${getApiBaseUrl()}/auth/logout`, {});
   return data;
 }
 
 export async function getLastLoginEmail() {
-  const { data } = await axios.get(`${base}/auth/last-email`);
+  const { data } = await axios.get(`${getApiBaseUrl()}/auth/last-email`);
   return data?.email || "";
 }
 
@@ -44,9 +56,7 @@ export async function uploadResume(file, meta = {}) {
   if (meta.company) form.append("company", meta.company);
   if (meta.jobDescription) form.append("job_description", meta.jobDescription);
   if (meta.interviewType) form.append("interview_type", meta.interviewType);
-  const { data } = await axios.post(`${base}/upload_resume`, form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await axios.post(`${getApiBaseUrl()}/upload_resume`, form);
   if (data?.session_id) setSessionId(data.session_id);
   return data;
 }
@@ -67,22 +77,20 @@ export async function submitAnswer(audioBlob, questionText, facialFrames = [], m
       form.append("facial_frames", facialFrames[i], `frame_${i}.jpg`);
     }
   }
-  const { data } = await axios.post(`${base}/submit_answer`, form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await axios.post(`${getApiBaseUrl()}/submit_answer`, form);
   return data;
 }
 
 export async function endInterview() {
   const sessionId = getSessionId();
   const payload = sessionId ? { session_id: sessionId } : {};
-  const { data } = await axios.post(`${base}/end_interview`, payload);
+  const { data } = await axios.post(`${getApiBaseUrl()}/end_interview`, payload);
   return data;
 }
 
 export async function getFeedback() {
   const sessionId = getSessionId();
-  const { data } = await axios.get(`${base}/feedback`, {
+  const { data } = await axios.get(`${getApiBaseUrl()}/feedback`, {
     params: sessionId ? { session_id: sessionId } : {},
   });
   return data;
@@ -90,7 +98,7 @@ export async function getFeedback() {
 
 export async function getQuestions() {
   const sessionId = getSessionId();
-  const { data } = await axios.get(`${base}/questions`, {
+  const { data } = await axios.get(`${getApiBaseUrl()}/questions`, {
     params: sessionId ? { session_id: sessionId } : {},
   });
   return data;
@@ -98,22 +106,20 @@ export async function getQuestions() {
 
 /** Recent sessions stored in SQLite (past interviews). */
 export async function listSessions(limit = 30) {
-  const { data } = await axios.get(`${base}/history`, { params: { limit } });
+  const { data } = await axios.get(`${getApiBaseUrl()}/history`, { params: { limit } });
   return data;
 }
 
 /** Full session detail for history drill-down. */
 export async function getHistorySession(sessionId) {
-  const { data } = await axios.get(`${base}/history/${encodeURIComponent(sessionId)}`);
+  const { data } = await axios.get(`${getApiBaseUrl()}/history/${encodeURIComponent(sessionId)}`);
   return data;
 }
 
 export async function analyzeFacial(imageBlob) {
   const form = new FormData();
   form.append("image", imageBlob, "frame.jpg");
-  const { data } = await axios.post(`${base}/analyze_facial`, form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await axios.post(`${getApiBaseUrl()}/analyze_facial`, form);
   return data;
 }
 
@@ -127,8 +133,6 @@ export async function realtimeAnalysis(audioChunk, frame) {
   if (sessionId) form.append("session_id", sessionId);
   if (audioChunk) form.append("audio_chunk", audioChunk, "chunk.webm");
   if (frame) form.append("frame", frame, "frame.jpg");
-  const { data } = await axios.post(`${base}/realtime_analysis`, form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await axios.post(`${getApiBaseUrl()}/realtime_analysis`, form);
   return data;
 }
