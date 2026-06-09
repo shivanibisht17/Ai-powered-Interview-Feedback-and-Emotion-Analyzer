@@ -8,6 +8,8 @@ import {
   realtimeAnalysis,
   listSessions,
   getHistorySession,
+  wakeBackend,
+  formatApiError,
 } from "./api";
 
 const INTERVIEW_TYPES = [
@@ -187,7 +189,7 @@ export default function App() {
       setPastSessions(data.sessions || []);
       setStep("history");
     } catch (e) {
-      setError(e.response?.data?.error || e.message || "Could not load sessions.");
+      setError(formatApiError(e, "Could not load sessions."));
     } finally {
       setHistoryLoading(false);
     }
@@ -202,7 +204,7 @@ export default function App() {
       const d = await getHistorySession(sessionId);
       setHistoryDetail(d);
     } catch (e) {
-      setError(e.response?.data?.error || e.message || "Could not load session detail.");
+      setError(formatApiError(e, "Could not load session detail."));
       setStep("history");
     } finally {
       setHistoryDetailLoading(false);
@@ -245,8 +247,9 @@ export default function App() {
       setStep("interview");
       setCurrentIndex(0);
       setPerAnswerResults([]);
+      wakeBackend();
     } catch (e) {
-      setError(e.response?.data?.error || e.message || "Upload failed.");
+      setError(formatApiError(e, "Upload failed."));
     } finally {
       setLoading(false);
     }
@@ -286,7 +289,7 @@ export default function App() {
         setCurrentIndex((i) => i + 1);
       }
     } catch (e) {
-      setError(e.response?.data?.error || e.message || "Submit failed.");
+      setError(formatApiError(e, "Submit failed."));
     } finally {
       setLoading(false);
     }
@@ -332,7 +335,7 @@ export default function App() {
         setFeedback(fb);
         setStep("results");
       } catch (e) {
-        setError(e.response?.data?.error || e.message || "Could not end interview.");
+        setError(formatApiError(e, "Could not end interview."));
       } finally {
         setLoading(false);
       }
@@ -768,7 +771,11 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-                {loading && <p className="text-sm text-slate-400 mt-3">Processing audio…</p>}
+                {loading && (
+                  <p className="text-sm text-slate-400 mt-3">
+                    Processing audio… This can take up to a minute on the first answer while the server loads AI models.
+                  </p>
+                )}
                 {error && <p className="text-sm text-rose-400 mt-3">{error}</p>}
                 <p className="text-xs text-slate-500 mt-3">
                   Timer: {QUESTION_TIME_LIMIT_SECONDS}s max · Frames captured every 2s · Live score updates every 3s

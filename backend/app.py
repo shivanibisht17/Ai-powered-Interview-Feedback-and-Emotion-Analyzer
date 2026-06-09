@@ -68,6 +68,23 @@ app = Flask(__name__)
 CORS(app)   # Allow frontend (React) to communicate with backend
 init_db()
 
+# Cap webcam frames per answer to keep uploads fast on free-tier hosts (Render/Netlify).
+MAX_FACIAL_FRAMES_PER_ANSWER = int(os.environ.get("MAX_FACIAL_FRAMES_PER_ANSWER", "10"))
+
+
+def _warmup_models() -> None:
+    """Load Whisper once at startup so the first /submit_answer is not a cold spike."""
+    try:
+        from speech_to_text import get_model
+
+        get_model()
+        print("[startup] Whisper model warmed up")
+    except Exception as e:
+        print(f"[startup] Whisper warmup skipped: {e}")
+
+
+_warmup_models()
+
 
 # -------------------------------
 # Directory setup for storage
@@ -460,6 +477,8 @@ def _submit_answer_impl():
                     facial_frames.append(data)
     except Exception:
         pass
+    if len(facial_frames) > MAX_FACIAL_FRAMES_PER_ANSWER:
+        facial_frames = facial_frames[-MAX_FACIAL_FRAMES_PER_ANSWER:]
 
     # Save audio exactly as received; preserve original extension.
     uid = uuid.uuid4().hex
@@ -684,6 +703,12 @@ def analyze_facial():
 # ============================================================
 # API 6: Get Questions
 # ============================================================
+@app.route("/health", methods=["GET"])
+def health():
+    """Lightweight liveness probe for waking Render before heavy interview requests."""
+    return jsonify({"status": "ok"})
+
+
 @app.route("/questions", methods=["GET"])
 def get_questions():
     """
@@ -717,26 +742,12 @@ def realtime_analysis():
     facial_conf = None
     note_parts = []
 
-    audio_chunk = request.files.get("audio_chunk")
     frame = request.files.get("frame")
 
     tmp_paths = []
 
-    if audio_chunk:
-        suffix = os.path.splitext(audio_chunk.filename or "")[1] or ".webm"
-        tmp_in = tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=AUDIO_DIR)
-        tmp_paths.append(tmp_in.name)
-        tmp_in.close()
-        audio_chunk.save(tmp_in.name)
-        wav_path = convert_audio_to_wav(tmp_in.name)
-        if wav_path:
-            tmp_paths.append(wav_path)
-            voice_data = analyze_voice(wav_path)
-            voice_nervous = float(voice_data.get("nervous_score", 50))
-            note_parts.append(voice_data.get("summary", "Voice chunk analyzed."))
-        else:
-            note_parts.append("Voice chunk could not be decoded.")
-
+    # Live ticks use facial signal (+ prior answer relevance) only. Decoding partial
+    # WebM chunks with FFmpeg/Whisper every 3s is too heavy for Render free tier.
     if frame:
         data = frame.read()
         if data and len(data) > 100:
@@ -834,7 +845,9 @@ def history_detail(session_id: str):
 # Run Flask server
 # ============================================================
 if __name__ == "__main__":
-    print("Starting Flask server on http://127.0.0.1:5000")
+    port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    print(f"Starting Flask server on http://{host}:{port}")
     # Run without Flask's debug reloader to avoid request drops / ECONNRESET
     # when heavy libraries (e.g., torch/whisper) mutate files in site-packages.
-    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+    app.run(host=host, port=port, debug=False, use_reloader=False)
